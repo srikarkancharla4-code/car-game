@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <title>NEON STREET RACER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="game-canvas" aria-label="3D neon highway"></canvas>
+  <div class="scene-vignette"></div>
+  <div class="speed-lines" id="speed-lines"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Neon Street Racer home"><span class="brand-mark">N<span>SR</span></span><span class="brand-name">NEON <b>STREET</b><br>RACER</span></a>
+    <div class="top-meta"><span class="live-dot"></span><span id="header-level">LEVEL 01</span><i></i><span class="coin-chip"><b class="coin-glyph">¢</b><strong id="header-coins">1,250</strong></span></div>
+    <button class="icon-button" id="quick-settings" aria-label="Settings" title="Settings">☼</button>
+  </header>
+
+  <main id="menu-screen" class="menu-screen">
+    <section class="hero-copy">
+      <p class="eyebrow"><span></span> CITY RUN // 01:42 AM</p>
+      <h1>OWN THE<br><em>AFTER</em> HOURS<span class="title-period">.</span></h1>
+      <p class="hero-subtitle">The city is yours. The highway isn't.</p>
+      <div class="hero-actions">
+        <button class="button button-primary" id="play-button"><span>START ENGINE</span><b>↗</b></button>
+        <button class="button button-quiet" data-panel="garage"><span class="button-icon">◇</span> GARAGE</button>
+      </div>
+      <div class="menu-links">
+        <button data-panel="missions">MISSIONS <span>↗</span></button>
+        <button data-panel="daily">DAILY DROP <span>↗</span></button>
+        <button data-panel="leaderboard">LEADERBOARD <span>↗</span></button>
+        <button data-panel="settings">SETTINGS <span>↗</span></button>
+      </div>
+    </section>
+    <aside class="race-card" aria-label="Race setup">
+      <div class="race-card-head"><span>QUICK RACE</span><span class="live-tag">● LIVE</span></div>
+      <div class="race-mode-label">RACE MODE</div>
+      <div class="mode-select" id="mode-select">
+        <button class="mode-option selected" data-mode="endless">ENDLESS</button>
+        <button class="mode-option" data-mode="time">TIME ATTACK</button>
+        <button class="mode-option" data-mode="traffic">TRAFFIC RUN</button>
+        <button class="mode-option" data-mode="police">POLICE ESCAPE</button>
+      </div>
+      <div class="race-card-foot"><span><small>YOUR BEST</small><b id="menu-best">000,000</b></span><span class="car-preview-label"><i></i><b id="menu-car-name">VOLT GT</b></span></div>
+    </aside>
+    <div class="scene-caption"><span>01</span><i></i> NEON DISTRICT <b>·</b> CLEAR SKY</div>
+    <div class="scroll-cue"><span>SCROLL THE STREETS</span><b>↓</b></div>
+  </main>
+
+  <section id="hud" class="hud hidden" aria-live="polite">
+    <div class="hud-top-left"><div class="hud-label">SCORE</div><strong id="hud-score">000000</strong><div class="hud-distance"><span>DISTANCE</span><b id="hud-distance">0.00 <small>KM</small></b></div></div>
+    <div class="hud-speed"><span id="hud-speed">000</span><small>KM/H</small><div class="speed-ticks"></div></div>
+    <div class="hud-top-right"><button class="pause-button" id="pause-button" aria-label="Pause">Ⅱ</button><div class="hud-label">CREDITS</div><strong class="hud-coins"><span>¢</span><b id="hud-coins">0</b></strong><div id="combo-label" class="combo-label">x1 COMBO</div></div>
+    <div class="mission-toast" id="mission-toast"><span>RUN OBJECTIVE</span><b id="hud-objective">Drive 5 km</b></div>
+    <div class="nitro-bar"><div class="nitro-title"><span>NITRO SYSTEM</span><b id="nitro-percent">100%</b></div><div class="nitro-track"><i id="nitro-fill"></i></div></div>
+    <div class="near-miss" id="near-miss">NEAR MISS! <small>+250</small></div>
+    <div class="police-warning hidden" id="police-warning">⚠ PURSUIT ACTIVE</div>
+    <div class="touch-controls" id="touch-controls"><button data-control="left" aria-label="Steer left">←</button><button data-control="brake" aria-label="Brake">▼</button><button data-control="nitro" aria-label="Nitro">N₂</button><button data-control="right" aria-label="Steer right">→</button></div>
+  </section>
+
+  <section class="overlay hidden" id="panel-overlay" role="dialog" aria-modal="true" aria-labelledby="panel-title"><div class="panel-wrap"><button class="close-button" id="close-panel" aria-label="Close">×</button><div id="panel-content"></div></div></section>
+  <section class="overlay hidden" id="pause-overlay" role="dialog" aria-modal="true"><div class="result-panel pause-panel"><p class="eyebrow">RACE CONTROL</p><h2>TAKE A<br><em>BREATHER.</em></h2><button class="button button-primary" id="resume-button">RESUME RACE <b>↗</b></button><button class="button button-outline" id="restart-button">RESTART RUN</button><button class="text-action" id="pause-home">RETURN TO GARAGE</button></div></section>
+  <section class="overlay hidden" id="gameover-overlay" role="dialog" aria-modal="true"><div class="result-panel gameover-panel"><p class="eyebrow">RUN COMPLETE</p><h2>THAT WAS<br><em>A RIDE.</em></h2><div class="result-grid"><div><small>FINAL SCORE</small><b id="result-score">0</b></div><div><small>DISTANCE</small><b id="result-distance">0 KM</b></div><div><small>RUN CREDITS</small><b id="result-coins">0</b></div><div><small>PERSONAL BEST</small><b id="result-best">0</b></div></div><p class="result-level" id="result-level">+0 XP · LEVEL 1</p><button class="button button-primary" id="retry-button">RUN IT BACK <b>↗</b></button><button class="button button-outline" id="result-garage">VISIT GARAGE</button><button class="text-action" id="result-home">MAIN MENU</button></div></section>
+  <div class="intro-overlay hidden" id="intro-overlay"><p>NEON DISTRICT <span>·</span> 01:42 AM</p><strong>TAP TO RACE</strong></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
